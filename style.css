@@ -1,98 +1,127 @@
+/* ==============================
+   BASE LAYOUT
+============================== */
+
 body {
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url("background.jpg");
+    background: url("background.jpg") center / cover no-repeat;
     font-family: "Pixelify Sans", sans-serif;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    overflow: hidden;
 }
 
-/* Envelope Screen */
+
+/* ==============================
+   ENVELOPE SCREEN
+============================== */
+
 #envelope-container {
     text-align: center;
-    cursor:pointer;
-}
-
-@keyframes pulse {
-    0% {
-        transform:scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-#envelope{
-    width: 200px;
-    animation: pulse 1.5s infinite;
     cursor: pointer;
 }
 
-#letter-container{
+@keyframes smoothPulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+#envelope {
+    width: 200px;
+    animation: smoothPulse 2.2s cubic-bezier(.4,0,.2,1) infinite;
+    will-change: transform;
+}
+
+
+/* ==============================
+   LETTER CONTAINER
+============================== */
+
+#letter-container {
     display: none;
-    position:fixed;
+    position: fixed;
     inset: 0;
     justify-content: center;
     align-items: center;
 }
 
-.letter-window{
+
+/* ==============================
+   LETTER WINDOW
+============================== */
+
+.letter-window {
     width: 90vw;
     max-width: 800px;
     aspect-ratio: 3/2;
-    padding: 20px 20px 0 20px;
+    padding: 180px 20px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-image: url("window.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 12px;
-    gap: 1px;
-    padding-top: 180px;
 
-    transform: scale(1.2);
+    background: url("window.png") center / contain no-repeat;
+    border-radius: 12px;
+    gap: 8px;
+
+    transform: scale(1.15) translateY(30px);
     opacity: 0;
-    transition: transform 0.6s ease, opacity 0.6s ease;
+
+    transition: 
+        transform 0.7s cubic-bezier(.22,1,.36,1),
+        opacity 0.6s ease-out;
+
+    will-change: transform, opacity;
 }
 
 .letter-window.open {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     opacity: 1;
 }
 
+
+/* ==============================
+   TEXT
+============================== */
+
 h1 {
     font-size: 30px;
-    margin:0;
+    margin: 0;
+    transition: transform 0.4s ease;
 }
 
 p {
     font-size: 40px;
+    margin: 0;
 }
 
-/* Cat */
+
+/* ==============================
+   CAT ANIMATION
+============================== */
 
 .cat {
     width: 250px;
     margin: 10px 0;
-    transition: width 0.4s ease;
+    transition: transform 0.5s ease, width 0.4s ease;
+    will-change: transform;
 }
 
+/* Slight shrink + bounce effect */
 .letter-window.final .cat {
     width: 180px;
+    transform: scale(1.05);
 }
 
-/* buttons */
+
+/* ==============================
+   BUTTON SECTION
+============================== */
+
 .buttons {
     display: flex;
     justify-content: center;
@@ -100,43 +129,70 @@ p {
     position: relative;
 }
 
-.no-wrapper{
-    position:relative;
+.no-wrapper {
+    position: relative;
 }
+
+
+/* ==============================
+   BUTTON BASE STYLE
+============================== */
 
 .btn {
     width: 120px;
-    cursor: pointer;
     user-select: none;
+    will-change: transform;
 }
 
 .yes-btn,
 .no-btn {
-width: 120px;
-height: auto;
-display: inline-block;
+    width: 120px;
+    display: inline-block;
 }
+
+
+/* ==============================
+   YES BUTTON
+============================== */
 
 .yes-btn {
     position: relative;
     z-index: 2;
-    transform-origin: center center;
-    transition: transform 0.3s ease;
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(.22,1,.36,1);
 }
 
+
+/* ==============================
+   NO BUTTON
+============================== */
+
 .no-btn {
-    z-index: 1;
     position: relative;
-    transition: transform 0.15s ease;
+    z-index: 1;
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
     cursor: default;
 }
 
-.final-text{
+
+/* ==============================
+   FINAL TEXT
+============================== */
+
+.final-text {
     font-size: 22px;
-    line-height: 1.4;
+    line-height: 1.5;
     text-align: center;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgba(255,240,240,0.5);
-    border-radius: 12px;
+    padding: 12px 22px;
+    background-color: rgba(255,240,240,0.6);
+    border-radius: 14px;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.letter-window.final .final-text {
+    opacity: 1;
+    transform: translateY(0);
 }
