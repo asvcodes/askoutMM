@@ -1,6 +1,11 @@
-// Elements
+// ==============================
+// ELEMENT REFERENCES
+// ==============================
+
 const envelope = document.getElementById("envelope-container");
 const letter = document.getElementById("letter-container");
+const letterWindow = document.querySelector(".letter-window");
+
 const noBtn = document.querySelector(".no-btn");
 const yesBtn = document.querySelector(".btn[alt='Yes']");
 
@@ -9,62 +14,85 @@ const catImg = document.getElementById("letter-cat");
 const buttons = document.getElementById("letter-buttons");
 const finalText = document.getElementById("final-text");
 
-// Click Envelope
+
+// ==============================
+// ENVELOPE OPEN LOGIC
+// ==============================
 
 envelope.addEventListener("click", () => {
     envelope.style.display = "none";
     letter.style.display = "flex";
 
-    setTimeout( () => {
-        document.querySelector(".letter-window").classList.add("open");
-    },50);
+    setTimeout(() => {
+        letterWindow.classList.add("open");
+    }, 50);
 });
 
-// Logic to move the NO btn
 
-noBtn.addEventListener("mouseover", () => {
-    const min = 200;
-    const max = 200;
+// ==============================
+// BETTER RANDOM DODGE LOGIC
+// ==============================
 
-    const distance = Math.random() * (max - min) + min;
-    const angle = Math.random() * Math.PI * 2;
+function moveNoButton() {
 
-    const moveX = Math.cos(angle) * distance;
-    const moveY = Math.sin(angle) * distance;
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
 
-    noBtn.style.transition = "transform 0.2s ease";
-    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
-});
+    const padding = 20; // distance from edges
 
-// Logic to make YES btn to grow
+    const maxX = window.innerWidth - btnWidth - padding;
+    const maxY = window.innerHeight - btnHeight - padding;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.transition = "all 0.35s cubic-bezier(.17,.67,.83,.67)";
+    noBtn.style.left = `${randomX}px`;
+    noBtn.style.top = `${randomY}px`;
+}
+
+// Trigger dodge when cursor approaches
+noBtn.addEventListener("mouseenter", moveNoButton);
+
+
+// ==============================
+// YES BUTTON AUTO GROW LOGIC
+// ==============================
 
 let yesScale = 1;
+let growthRate = 0.05; // subtle growth per second
 
-yesBtn.style.position = "relative"
-yesBtn.style.transformOrigin = "center center";
 yesBtn.style.transition = "transform 0.3s ease";
+yesBtn.style.transformOrigin = "center center";
+
+setInterval(() => {
+    yesScale += growthRate;
+    yesBtn.style.transform = `scale(${yesScale})`;
+}, 1000);
+
+
+// ==============================
+// EXTRA: YES grows more when NO clicked
+// ==============================
 
 noBtn.addEventListener("click", () => {
-     yesScale += 2;
-
-     if (yesBtn.style.position !== "fixed") {
-         yesBtn.style.position = "fixed";
-         yesBtn.style.top = "50%";
-         yesBtn.style.left = "50%";
-         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-     }else{
-         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-     }
+    yesScale += 0.3;
+    yesBtn.style.transform = `scale(${yesScale})`;
 });
 
-// YES is clicked
+
+// ==============================
+// FINAL YES CLICK EVENT
+// ==============================
 
 yesBtn.addEventListener("click", () => {
-    title.textContent = "hehehehehe!";
+
+    title.textContent = "Hehehehehe! 😼";
 
     catImg.src = "cat_dance.gif";
 
-    document.querySelector(".letter-window").classList.add("final");
+    letterWindow.classList.add("final");
 
     buttons.style.display = "none";
 
